@@ -63,7 +63,7 @@ namespace browz.DataModel
         /// </summary>
         public IReadOnlyList<FileEntry> Entries
         {
-            get { return (IReadOnlyList<FileEntry>)_collection; }
+            get { return _collection.ToList(); }
         }
 
         #endregion

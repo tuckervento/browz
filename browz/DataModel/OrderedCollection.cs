@@ -63,7 +63,7 @@ namespace browz.DataModel
         /// </summary>
         public IReadOnlyDictionary<string, FileEntryCollection> Collection
         {
-            get { return (IReadOnlyDictionary<string, FileEntryCollection>)_collection; }
+            get { return _collection; }
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace browz.DataModel
         /// </summary>
         public IReadOnlyList<string> GroupNames
         {
-            get { return (IReadOnlyList<string>)_collection.Keys.ToList(); }
+            get { return _collection.Keys.ToList(); }
         }
 
         #endregion
