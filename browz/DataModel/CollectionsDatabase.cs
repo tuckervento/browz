@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace browz.DataModel
 {
@@ -48,18 +49,33 @@ namespace browz.DataModel
         #region Properties
 
         /// <summary>
-        /// A read only copy of the directories searched through for this database.
+        /// The directories searched through for this database.
         /// </summary>
-        public IReadOnlyList<string> Directories
+        public DirectoryList DirectoryList
         {
-            get { return _directories.Directories; }
+            get { return _directories; }
+        }
+
+        public IReadOnlyList<FileEntry> FileMasterList
+        {
+            get { return _master.Entries; }
         }
 
         #endregion
 
         #region Database modification
 
-
+        /// <summary>
+        /// Search through directories as specified by the DirectoryList of this database, and store all of the found files in the master list.
+        /// </summary>
+        public void GenerateMasterList()
+        {
+            foreach (var kvp in _directories.DirectoryDictionary) {
+                var files = Directory.EnumerateFiles(kvp.Key, "*",
+                    (kvp.Value ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly));
+                _master.AddEntries(files);
+            }
+        }
 
         #endregion
     }
