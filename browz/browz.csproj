@@ -44,10 +44,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataModel\CollectionsDatabase.cs" />
+    <Compile Include="DataModel\DirectoryList.cs" />
     <Compile Include="DataModel\FileEntryCollection.cs" />
     <Compile Include="DataModel\OrderedCollection.cs" />
     <Compile Include="DataModel\Serialization.cs" />
     <Compile Include="DataModel\FileEntry.cs" />
+    <Compile Include="Forms\CollectionBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CollectionBrowser.Designer.cs">
+      <DependentUpon>CollectionBrowser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\StartPage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -56,6 +64,9 @@
     </Compile>
     <Compile Include="Browz.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\CollectionBrowser.resx">
+      <DependentUpon>CollectionBrowser.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

@@ -13,5 +13,7 @@ namespace browz.DataModel
         public static readonly string FileEntryCollectionEntries = "FECEntries";
         public static readonly string OrderedCollectionName = "OCName";
         public static readonly string OrderedCollectionDictionary = "OCDict";
+        public static readonly string DirectoryEntryPath = "DEPath";
+        public static readonly string DirectoryEntryRecursive = "DERecursive";
     }
 }
