@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using browz.Forms;
 
 namespace browz
 {
@@ -16,7 +17,7 @@ namespace browz
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new StartPage());
+            Application.Run(new Forms.StartPage());
         }
     }
 }

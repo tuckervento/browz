@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace browz
+namespace browz.Forms
 {
     public partial class StartPage : Form
     {
