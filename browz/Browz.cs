@@ -17,7 +17,7 @@ namespace browz
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Forms.StartPage());
+            Application.Run(new StartPage());
         }
     }
 }

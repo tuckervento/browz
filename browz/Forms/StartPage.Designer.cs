@@ -1,4 +1,4 @@
-﻿namespace browz
+﻿namespace browz.Forms
 {
     partial class StartPage
     {
