@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace browz.DataModel
 {
     [Serializable()]
-    public class OrderedCollection : ISerializable
+    public class OrganizedCollection : ISerializable
     {
         private Dictionary<string, FileEntryCollection> _collection;
         private string _name;
@@ -19,7 +19,7 @@ namespace browz.DataModel
         /// Creates a new OrderedCollection with the specified name.
         /// </summary>
         /// <param name="p_name">The name of the new OrderedCollection</param>
-        public OrderedCollection(string p_name)
+        public OrganizedCollection(string p_name)
         {
             _name = p_name;
             _collection = new Dictionary<string, FileEntryCollection>();
@@ -30,7 +30,7 @@ namespace browz.DataModel
         /// </summary>
         /// <param name="p_name">The name of the new OrderedCollection</param>
         /// <param name="p_collection">The initial entries for the OrderedCollection</param>
-        public OrderedCollection(string p_name, Dictionary<string, FileEntryCollection> p_collection)
+        public OrganizedCollection(string p_name, Dictionary<string, FileEntryCollection> p_collection)
         {
             _name = p_name;
             _collection = p_collection;
@@ -39,7 +39,7 @@ namespace browz.DataModel
         /// <summary>
         /// Serialization constructor.
         /// </summary>
-        public OrderedCollection(SerializationInfo p_info, StreamingContext p_context)
+        public OrganizedCollection(SerializationInfo p_info, StreamingContext p_context)
         {
             _name = (string)p_info.GetValue(Serialization.OrderedCollectionName, typeof(string));
             _collection = (Dictionary<string, FileEntryCollection>)p_info.GetValue(Serialization.OrderedCollectionDictionary, typeof(Dictionary<string, FileEntryCollection>));

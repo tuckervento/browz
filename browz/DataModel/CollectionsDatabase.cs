@@ -13,7 +13,7 @@ namespace browz.DataModel
     {
         private readonly string _name;
         private FileEntryCollection _master;
-        private Dictionary<string, OrderedCollection> _collections;
+        private Dictionary<string, OrganizedCollection> _collections;
         private DirectoryList _directories;
 
         #region Constructors
@@ -26,7 +26,7 @@ namespace browz.DataModel
         {
             _name = p_name;
             _master = new FileEntryCollection("Master");
-            _collections = new Dictionary<string, OrderedCollection>();
+            _collections = new Dictionary<string, OrganizedCollection>();
             _directories = new DirectoryList();
         }
 
@@ -40,7 +40,7 @@ namespace browz.DataModel
         {
             _name = p_name;
             _master = p_master;
-            _collections = new Dictionary<string,OrderedCollection>();
+            _collections = new Dictionary<string,OrganizedCollection>();
             _directories = p_directories;
         }
 
@@ -56,6 +56,9 @@ namespace browz.DataModel
             get { return _directories; }
         }
 
+        /// <summary>
+        /// The master list of files used for the various collections.
+        /// </summary>
         public IReadOnlyList<FileEntry> FileMasterList
         {
             get { return _master.Entries; }
