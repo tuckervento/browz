@@ -111,6 +111,24 @@ namespace browz.DataModel
         }
 
         /// <summary>
+        /// Removes the specified file from the collection, if it exists.
+        /// </summary>
+        /// <param name="p_entry">The entry to remove</param>
+        public void RemoveEntry(FileEntry p_entry)
+        {
+            _collection = _collection.Where(e => !e.Equals(p_entry));
+        }
+
+        /// <summary>
+        /// Removes the specified file from the collection, if it exists.
+        /// </summary>
+        /// <param name="p_entry">The entry to remove</param>
+        public void RemoveEntry(string p_entry)
+        {
+            _collection = _collection.Where(e => !e.Equals((FileEntry)p_entry));
+        }
+
+        /// <summary>
         /// Stores the union of this collection with the provided collection.
         /// </summary>
         /// <param name="p_collection">The collection to union with</param>
