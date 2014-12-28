@@ -13,7 +13,7 @@ namespace browz.DataModel
     {
         private readonly string _name;
         private FileEntryCollection _master;
-        private Dictionary<string, OrganizedCollection> _collections;
+        private IEnumerable<OrganizedCollection> _collections;
         private DirectoryList _directories;
 
         #region Constructors
@@ -26,7 +26,7 @@ namespace browz.DataModel
         {
             _name = p_name;
             _master = new FileEntryCollection("Master");
-            _collections = new Dictionary<string, OrganizedCollection>();
+            _collections = new List<OrganizedCollection>();
             _directories = new DirectoryList();
         }
 
@@ -40,7 +40,7 @@ namespace browz.DataModel
         {
             _name = p_name;
             _master = p_master;
-            _collections = new Dictionary<string,OrganizedCollection>();
+            _collections = new List<OrganizedCollection>();
             _directories = p_directories;
         }
 
@@ -78,6 +78,29 @@ namespace browz.DataModel
                     (kvp.Value ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly));
                 _master.AddEntries(files);
             }
+        }
+
+        /// <summary>
+        /// Add a new OrganizedCollection object to the CollectionsDatabase
+        /// </summary>
+        /// <param name="p_name">The name of the new OrganizedCollection</param>
+        /// <returns>True if successful, false if a collection with that name exists</returns>
+        public bool AddCollection(string p_name)
+        {
+            return this.AddCollection(new OrganizedCollection(p_name));
+        }
+
+
+        /// <summary>
+        /// Add a new OrganizedCollection object to the CollectionsDatabase
+        /// </summary>
+        /// <param name="p_collection">The name of the new OrganizedCollection</param>
+        /// <returns>True if successful, false if a collection with that name exists</returns>
+        public bool AddCollection(OrganizedCollection p_collection)
+        {
+            if (_collections.Any(e => e.Name == p_collection.Name)) { return false; }
+            _collections = _collections.Union(new OrganizedCollection[] { p_collection });
+            return true;
         }
 
         #endregion
