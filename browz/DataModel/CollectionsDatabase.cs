@@ -73,6 +73,7 @@ namespace browz.DataModel
         /// </summary>
         public void GenerateMasterList()
         {
+            _master = new FileEntryCollection("Master");
             foreach (var kvp in _directories.DirectoryDictionary) {
                 var files = Directory.EnumerateFiles(kvp.Key, "*",
                     (kvp.Value ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly));
@@ -89,7 +90,6 @@ namespace browz.DataModel
         {
             return this.AddCollection(new OrganizedCollection(p_name));
         }
-
 
         /// <summary>
         /// Add a new OrganizedCollection object to the CollectionsDatabase
