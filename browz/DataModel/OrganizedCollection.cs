@@ -11,7 +11,7 @@ namespace browz.DataModel
     public class OrganizedCollection : ISerializable
     {
         private string _name;
-        private IEnumerable<FileEntryCollection> _collection;
+        private FileEntryCollection _collection;
 
         #region Constructors
 
@@ -22,7 +22,7 @@ namespace browz.DataModel
         public OrganizedCollection(string p_name)
         {
             _name = p_name;
-            _collection = new List<FileEntryCollection>();
+            _collection = new FileEntryCollection();
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace browz.DataModel
         /// </summary>
         /// <param name="p_name">The name of the new OrderedCollection</param>
         /// <param name="p_collection">The initial entries for the OrderedCollection</param>
-        public OrganizedCollection(string p_name, IEnumerable<FileEntryCollection> p_collection)
+        public OrganizedCollection(string p_name, FileEntryCollection p_collection)
         {
             _name = p_name;
             _collection = p_collection;
@@ -42,7 +42,7 @@ namespace browz.DataModel
         public OrganizedCollection(SerializationInfo p_info, StreamingContext p_context)
         {
             _name = (string)p_info.GetValue(Serialization.OrderedCollectionName, typeof(string));
-            _collection = (IEnumerable<FileEntryCollection>)p_info.GetValue(Serialization.OrderedCollectionDictionary, typeof(IEnumerable<FileEntryCollection>));
+            _collection = (FileEntryCollection)p_info.GetValue(Serialization.OrderedCollectionDictionary, typeof(FileEntryCollection));
         }
 
         #endregion
@@ -61,7 +61,7 @@ namespace browz.DataModel
         /// <summary>
         /// A copy of the entire collection
         /// </summary>
-        public IEnumerable<FileEntryCollection> Collection
+        public FileEntryCollection Collection
         {
             get { return _collection; }
         }
@@ -71,7 +71,11 @@ namespace browz.DataModel
         /// </summary>
         public IEnumerable<string> GroupNames
         {
-            get { foreach (var fec in _collection) { yield return fec.Name; } }
+            get {
+                var ret = new List<string>();
+                foreach (var fec in _collection.Entries) { if (!ret.Contains(fec.Tag)) { ret.Add(fec.Tag); } }
+                return ret;
+            }
         }
 
         #endregion
@@ -80,46 +84,24 @@ namespace browz.DataModel
         /// Returns a copy of the entries in the specified group, or null if it doesn't exist
         /// </summary>
         /// <param name="p_name">The name of the group to return</param>
-        public IReadOnlyList<FileEntry> GetGroup(string p_name)
+        public IEnumerable<FileEntry> GetEntriesTaggedAs(string p_name)
         {
-            return _collection.Any(e => e.Name == p_name) ?_collection.Single(e=> e.Name == p_name).Entries : null;
+            foreach (var fe in _collection.Entries.Where(e => e.Tag == p_name)) { yield return fe; }
         }
 
         #region Collection modification
 
         /// <summary>
-        /// Adds the specified group to the collection.  If a group with that name already exists, the two will be unioned.
+        /// Tags the specified entries of the collection.
         /// </summary>
-        /// <param name="p_group">The group to add</param>
-        public void AddGroup(FileEntryCollection p_group)
+        /// <param name="p_tag">The name of the tag</param>
+        /// <param name="p_entries">The entries to tag</param>
+        public void TagEntriesAs(string p_tag, IEnumerable<string> p_entries)
         {
-            if (_collection.Any(e => e.Name == p_group.Name))
-                _collection.Single(e => e.Name == p_group.Name).Union(p_group);
-            else
-                _collection.Union(new FileEntryCollection[] { p_group });
-        }
-
-        /// <summary>
-        /// Adds the specified entries to the collection.  If a group with that name already exists, the two will be unioned.
-        /// </summary>
-        /// <param name="p_name">The name of the group to add</param>
-        /// <param name="p_entries">The entries to add</param>
-        public void AddEntriesToGroup(string p_name, IEnumerable<FileEntry> p_entries)
-        {
-            if (_collection.Any(e => e.Name == p_name))
-                _collection.Single(e => e.Name == p_name).AddEntries(p_entries);
-            else
-                _collection.Union(new FileEntryCollection[] { new FileEntryCollection(p_name, p_entries) });
-        }
-
-        /// <summary>
-        /// Adds the specified entries to the collection.  If a group with that name already exists, the two will be unioned.
-        /// </summary>
-        /// <param name="p_name">The name of the group to add</param>
-        /// <param name="p_entries">The entries to add</param>
-        public void AddEntriesToGroup(string p_name, IEnumerable<string> p_entries)
-        {
-            this.AddEntriesToGroup(p_name, p_entries.Cast<FileEntry>());
+            foreach (var entry in p_entries)
+            {
+                _collection.TagEntryAs(entry, p_tag);
+            }
         }
 
         #endregion

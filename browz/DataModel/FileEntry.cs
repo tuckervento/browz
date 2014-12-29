@@ -11,6 +11,7 @@ namespace browz.DataModel
     public class FileEntry : ISerializable, IEquatable<FileEntry>
     {
         private readonly string _fullPath;
+        private string _tag;
 
         #region Constructors
 
@@ -21,6 +22,17 @@ namespace browz.DataModel
         public FileEntry(string p_fullpath)
         {
             _fullPath = p_fullpath;
+        }
+
+        /// <summary>
+        /// Creates a new FileEntry object.
+        /// </summary>
+        /// <param name="p_fullpath">The absolute path of the file to reference</param>
+        /// <param name="p_tag">The tag for the file</param>
+        public FileEntry(string p_fullpath, string p_tag)
+        {
+            _fullPath = p_fullpath;
+            _tag = p_tag;
         }
 
         /// <summary>
@@ -66,6 +78,15 @@ namespace browz.DataModel
             get { return System.IO.Path.GetExtension(_fullPath); }
         }
 
+        /// <summary>
+        /// The tag for the referenced file
+        /// </summary>
+        public string Tag
+        {
+            get { return _tag; }
+            set { _tag = value; }
+        }
+
         #endregion
 
         #region ISerializable
@@ -79,9 +100,23 @@ namespace browz.DataModel
 
         #region IEquatable
 
+        /// <summary>
+        /// Tests equality based on file name.
+        /// </summary>
+        /// <param name="other">The other FileEntry to compare</param>
+        /// <returns></returns>
         public bool Equals(FileEntry other)
         {
             return this.FileName.Equals(other.FileName);
+        }
+
+        /// <summary>
+        /// Tests equality based on file name.
+        /// </summary>
+        /// <param name="other">The name of the other file to compare</param>
+        public bool Equals(string other)
+        {
+            return this.FileName.Equals(other);
         }
 
         #endregion

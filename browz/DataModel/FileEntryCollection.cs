@@ -137,6 +137,19 @@ namespace browz.DataModel
             _collection = _collection.Union(p_collection.Entries);
         }
 
+        /// <summary>
+        /// Sets the tag on the specified entry.
+        /// </summary>
+        /// <param name="p_entry">The entry to tag</param>
+        /// <param name="p_tag">The tag to use</param>
+        /// <returns>Returns false if the entry doesn't exist</returns>
+        public bool TagEntryAs(string p_entry, string p_tag)
+        {
+            if (!_collection.Any(e => e.Equals(p_entry))) { return false; }
+            _collection.Single(e => e.Equals(p_entry)).Tag = p_tag;
+            return true;
+        }
+
         #endregion
 
         #region ISerializable
