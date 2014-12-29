@@ -11,8 +11,6 @@ namespace browz.DataModel
         public static readonly string FileEntryFullPath = "FEFullPath";
         public static readonly string FileEntryCollectionName = "FECName";
         public static readonly string FileEntryCollectionEntries = "FECEntries";
-        public static readonly string OrderedCollectionName = "OCName";
-        public static readonly string OrderedCollectionDictionary = "OCDict";
         public static readonly string DirectoryList = "DL";
     }
 }

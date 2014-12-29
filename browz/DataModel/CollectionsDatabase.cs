@@ -13,7 +13,7 @@ namespace browz.DataModel
     {
         private readonly string _name;
         private FileEntryCollection _master;
-        private IEnumerable<OrganizedCollection> _collections;
+        private IEnumerable<FileEntryCollection> _collections;
         private DirectoryList _directories;
 
         #region Constructors
@@ -26,7 +26,7 @@ namespace browz.DataModel
         {
             _name = p_name;
             _master = new FileEntryCollection("Master");
-            _collections = new List<OrganizedCollection>();
+            _collections = new List<FileEntryCollection>();
             _directories = new DirectoryList();
         }
 
@@ -40,7 +40,7 @@ namespace browz.DataModel
         {
             _name = p_name;
             _master = p_master;
-            _collections = new List<OrganizedCollection>();
+            _collections = new List<FileEntryCollection>();
             _directories = p_directories;
         }
 
@@ -88,7 +88,7 @@ namespace browz.DataModel
         /// <returns>True if successful, false if a collection with that name exists</returns>
         public bool AddCollection(string p_name)
         {
-            return this.AddCollection(new OrganizedCollection(p_name));
+            return this.AddCollection(new FileEntryCollection(p_name, _master.Entries));
         }
 
         /// <summary>
@@ -96,22 +96,10 @@ namespace browz.DataModel
         /// </summary>
         /// <param name="p_collection">The name of the new OrganizedCollection</param>
         /// <returns>True if successful, false if a collection with that name exists</returns>
-        public bool AddCollection(OrganizedCollection p_collection)
+        public bool AddCollection(FileEntryCollection p_collection)
         {
             if (HasCollection(p_collection.Name)) { return false; }
-            _collections = _collections.Union(new OrganizedCollection[] { p_collection });
-            return true;
-        }
-
-        public bool AddToCollection(string p_collection, string p_tag, string p_entry)
-        {
-            return this.AddToCollection(p_collection, p_tag, new string[] { p_entry });
-        }
-
-        public bool AddToCollection(string p_collection, string p_tag, IEnumerable<string> p_entries)
-        {
-            if (!HasCollection(p_collection)) { return false; }
-            _collections.Single(e => e.Name == p_collection).AddEntriesToGroup(p_tag, p_entries);
+            _collections = _collections.Union(new FileEntryCollection[] { p_collection });
             return true;
         }
 

@@ -66,6 +66,19 @@ namespace browz.DataModel
             get { return _collection.ToList(); }
         }
 
+        /// <summary>
+        /// A list of all the tags in the collection
+        /// </summary>
+        public IEnumerable<string> Tags
+        {
+            get
+            {
+                var ret = new List<string>();
+                foreach (var fec in _collection) { if (!ret.Contains(fec.Tag)) { ret.Add(fec.Tag); } }
+                return ret;
+            }
+        }
+
         #endregion
 
         #region Collection modification
@@ -150,7 +163,29 @@ namespace browz.DataModel
             return true;
         }
 
+        /// <summary>
+        /// Tags the specified entries.
+        /// </summary>
+        /// <param name="p_tag">The name of the tag</param>
+        /// <param name="p_entries">The entries to tag</param>
+        public void TagEntriesAs(string p_tag, IEnumerable<string> p_entries)
+        {
+            foreach (var entry in p_entries)
+            {
+                TagEntryAs(p_tag, entry);
+            }
+        }
+
         #endregion
+
+        /// <summary>
+        /// Returns a copy of the entries in the specified group, or null if it doesn't exist
+        /// </summary>
+        /// <param name="p_name">The name of the group to return</param>
+        public IEnumerable<FileEntry> GetEntriesTaggedAs(string p_name)
+        {
+            foreach (var fe in _collection.Where(e => e.Tag == p_name)) { yield return fe; }
+        }
 
         #region ISerializable
 
