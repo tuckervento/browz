@@ -82,25 +82,35 @@ namespace browz.DataModel
         }
 
         /// <summary>
+        /// Add a single FileEntry to all of the collections.
+        /// </summary>
+        /// <param name="p_path">The path to the file to add</param>
+        public void AddFileEntry(string p_path)
+        {
+            _master.AddEntry(p_path);
+        }
+
+        /// <summary>
         /// Add a new OrganizedCollection object to the CollectionsDatabase
         /// </summary>
         /// <param name="p_name">The name of the new OrganizedCollection</param>
         /// <returns>True if successful, false if a collection with that name exists</returns>
         public bool AddCollection(string p_name)
         {
-            return this.AddCollection(new FileEntryCollection(p_name, _master.Entries));
+            if (HasCollection(p_name)) { return false; }
+            _collections = _collections.Union(new FileEntryCollection[] { new FileEntryCollection(p_name, _master.Entries) });
+            return true;
         }
 
         /// <summary>
-        /// Add a new OrganizedCollection object to the CollectionsDatabase
+        /// Returns a copy of the entries with the specified tag, or null if it doesn't exist
         /// </summary>
-        /// <param name="p_collection">The name of the new OrganizedCollection</param>
-        /// <returns>True if successful, false if a collection with that name exists</returns>
-        public bool AddCollection(FileEntryCollection p_collection)
+        /// <param name="p_collection">The collection to search</param>
+        /// <param name="p_tag">The tag to find</param>
+        public IEnumerable<FileEntry> GetEntriesTaggedAs(string p_collection, string p_tag)
         {
-            if (HasCollection(p_collection.Name)) { return false; }
-            _collections = _collections.Union(new FileEntryCollection[] { p_collection });
-            return true;
+            if (!HasCollection(p_collection)) { return null; }
+            return _collections.Single(e => e.Name == p_collection).GetEntriesTaggedAs(p_tag);
         }
 
         #endregion

@@ -142,15 +142,6 @@ namespace browz.DataModel
         }
 
         /// <summary>
-        /// Stores the union of this collection with the provided collection.
-        /// </summary>
-        /// <param name="p_collection">The collection to union with</param>
-        public void Union(FileEntryCollection p_collection)
-        {
-            _collection = _collection.Union(p_collection.Entries);
-        }
-
-        /// <summary>
         /// Sets the tag on the specified entry.
         /// </summary>
         /// <param name="p_entry">The entry to tag</param>
@@ -179,12 +170,12 @@ namespace browz.DataModel
         #endregion
 
         /// <summary>
-        /// Returns a copy of the entries in the specified group, or null if it doesn't exist
+        /// Returns a copy of the entries with the specified tag, or null if it doesn't exist
         /// </summary>
-        /// <param name="p_name">The name of the group to return</param>
-        public IEnumerable<FileEntry> GetEntriesTaggedAs(string p_name)
+        /// <param name="p_tag">The tag to find</param>
+        public IEnumerable<FileEntry> GetEntriesTaggedAs(string p_tag)
         {
-            foreach (var fe in _collection.Where(e => e.Tag == p_name)) { yield return fe; }
+            foreach (var fe in _collection.Where(e => e.Tag == p_tag)) { yield return fe; }
         }
 
         #region ISerializable
