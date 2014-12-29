@@ -98,11 +98,28 @@ namespace browz.DataModel
         /// <returns>True if successful, false if a collection with that name exists</returns>
         public bool AddCollection(OrganizedCollection p_collection)
         {
-            if (_collections.Any(e => e.Name == p_collection.Name)) { return false; }
+            if (HasCollection(p_collection.Name)) { return false; }
             _collections = _collections.Union(new OrganizedCollection[] { p_collection });
             return true;
         }
 
+        public bool AddToCollection(string p_collection, string p_tag, string p_entry)
+        {
+            return this.AddToCollection(p_collection, p_tag, new string[] { p_entry });
+        }
+
+        public bool AddToCollection(string p_collection, string p_tag, IEnumerable<string> p_entries)
+        {
+            if (!HasCollection(p_collection)) { return false; }
+            _collections.Single(e => e.Name == p_collection).AddEntriesToGroup(p_tag, p_entries);
+            return true;
+        }
+
         #endregion
+
+        private bool HasCollection(string p_name)
+        {
+            return _collections.Any(e => e.Name == p_name);
+        }
     }
 }
