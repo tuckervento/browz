@@ -113,11 +113,32 @@ namespace browz.DataModel
             return _collections.Single(e => e.Name == p_collection).GetEntriesTaggedAs(p_tag);
         }
 
+        /// <summary>
+        /// Returns the collection with the specified name, or null if it doesn't exist.
+        /// </summary>
+        /// <param name="p_collection">The collection to find</param>
+        public FileEntryCollection GetCollection(string p_collection)
+        {
+            return (HasCollection(p_collection)) ? _collections.Single(e => e.Name == p_collection) : null;
+        }
+
         #endregion
 
         private bool HasCollection(string p_name)
         {
             return _collections.Any(e => e.Name == p_name);
         }
+
+        #region ISerializable
+
+        void GetObjectData(SerializationInfo p_info, StreamingContext p_context)
+        {
+            p_info.AddValue(Serialization.CollectionsDatabaseName, _name, typeof(string));
+            p_info.AddValue(Serialization.CollectionsDatabaseMaster, _master, typeof(FileEntryCollection));
+            p_info.AddValue(Serialization.CollectionsDatabaseCollections, _collections, typeof(IEnumerable<FileEntryCollection>));
+            p_info.AddValue(Serialization.CollectionsDatabaseDirs, _directories, typeof(DirectoryList));
+        }
+
+        #endregion
     }
 }

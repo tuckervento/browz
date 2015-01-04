@@ -12,5 +12,9 @@ namespace browz.DataModel
         public static readonly string FileEntryCollectionName = "FECName";
         public static readonly string FileEntryCollectionEntries = "FECEntries";
         public static readonly string DirectoryList = "DL";
+        public static readonly string CollectionsDatabaseName = "CDName";
+        public static readonly string CollectionsDatabaseMaster = "CDMaster";
+        public static readonly string CollectionsDatabaseCollections = "CDColls";
+        public static readonly string CollectionsDatabaseDirs = "CDDirs";
     }
 }
