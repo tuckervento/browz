@@ -55,7 +55,7 @@
             // 
             // openFileDialog
             // 
-            this.openFileDialog.Filter = "\"browz collections|*.brz|All files|*.*\"";
+            this.openFileDialog.Filter = "browz collections|*.brz|All files|*.*";
             // 
             // StartPage
             // 
