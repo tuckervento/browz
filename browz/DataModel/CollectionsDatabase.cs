@@ -64,6 +64,14 @@ namespace browz.DataModel
             get { return _master.Entries; }
         }
 
+        /// <summary>
+        /// The number of different collections within the database.
+        /// </summary>
+        public int CollectionCount
+        {
+            get { return _collections.Count(); }
+        }
+
         #endregion
 
         #region Database modification
@@ -131,7 +139,7 @@ namespace browz.DataModel
 
         #region ISerializable
 
-        void GetObjectData(SerializationInfo p_info, StreamingContext p_context)
+        public void GetObjectData(SerializationInfo p_info, StreamingContext p_context)
         {
             p_info.AddValue(Serialization.CollectionsDatabaseName, _name, typeof(string));
             p_info.AddValue(Serialization.CollectionsDatabaseMaster, _master, typeof(FileEntryCollection));
