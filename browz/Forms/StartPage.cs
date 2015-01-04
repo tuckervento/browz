@@ -16,5 +16,15 @@ namespace browz.Forms
         {
             InitializeComponent();
         }
+
+        private void buttonCreate_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonOpen_Click(object sender, EventArgs e)
+        {
+            var result = openFileDialog.ShowDialog();
+        }
     }
 }
