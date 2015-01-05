@@ -16,5 +16,6 @@ namespace browz.DataModel
         public static readonly string CollectionsDatabaseMaster = "CDMaster";
         public static readonly string CollectionsDatabaseCollections = "CDColls";
         public static readonly string CollectionsDatabaseDirs = "CDDirs";
+        public static readonly string CollectionsDatabaseExtensions = "CDExt";
     }
 }

@@ -34,11 +34,29 @@ namespace browz.DataModel
         /// </summary>
         /// <param name="p_directories">The directories to add</param>
         /// <param name="p_recursive">Whether the directories should be searched recursively</param>
-        public void AddDirectories(IEnumerable<string> p_directories, bool p_recursive)
+        public void Add(IEnumerable<string> p_directories, bool p_recursive)
         {
             foreach (var d in p_directories) {
                 _pathList[d] = p_recursive;
             }
+        }
+
+        /// <summary>
+        /// Adds the given directory into the DirectoryList with the associate bool value.
+        /// </summary>
+        /// <param name="p_directory">The directory to add</param>
+        /// <param name="p_recursive">Whether the directories should be searched recursively</param>
+        public void Add(string p_directory, bool p_recursive)
+        {
+            _pathList[p_directory] = p_recursive;
+        }
+
+        /// <summary>
+        /// Clear the list of directories.
+        /// </summary>
+        public void Clear()
+        {
+            _pathList.Clear();
         }
 
         /// <summary>

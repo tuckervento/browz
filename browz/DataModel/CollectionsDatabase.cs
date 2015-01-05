@@ -15,6 +15,7 @@ namespace browz.DataModel
         private FileEntryCollection _master;
         private IEnumerable<FileEntryCollection> _collections;
         private DirectoryList _directories;
+        private List<string> _extensions;
 
         #region Constructors
 
@@ -42,6 +43,18 @@ namespace browz.DataModel
             _master = p_master;
             _collections = new List<FileEntryCollection>();
             _directories = p_directories;
+        }
+
+        /// <summary>
+        /// Serialization constructor.
+        /// </summary>
+        public CollectionsDatabase(SerializationInfo p_info, StreamingContext p_context)
+        {
+            _name = (string)p_info.GetValue(Serialization.CollectionsDatabaseName, typeof(string));
+            _master = (FileEntryCollection)p_info.GetValue(Serialization.CollectionsDatabaseMaster, typeof(FileEntryCollection));
+            _collections = (IEnumerable<FileEntryCollection>)p_info.GetValue(Serialization.CollectionsDatabaseCollections, typeof(IEnumerable<FileEntryCollection>));
+            _directories = (DirectoryList)p_info.GetValue(Serialization.CollectionsDatabaseDirs, typeof(DirectoryList));
+            _extensions = (List<string>)p_info.GetValue(Serialization.CollectionsDatabaseExtensions, typeof(List<string>));
         }
 
         #endregion
@@ -77,6 +90,23 @@ namespace browz.DataModel
         #region Database modification
 
         /// <summary>
+        /// Adds file extensions to exclude from the search.
+        /// </summary>
+        /// <param name="p_extensions">The extensions to exclude</param>
+        public void AddExcludedExtensions(IEnumerable<string> p_extensions)
+        {
+            _extensions.AddRange(p_extensions.Where(e => !_extensions.Contains(e));
+        }
+
+        /// <summary>
+        /// Clears the list of excluded extensions.
+        /// </summary>
+        public void ClearExcludedExtensions()
+        {
+            _extensions.Clear();
+        }
+
+        /// <summary>
         /// Search through directories as specified by the DirectoryList of this database, and store all of the found files in the master list.
         /// </summary>
         public void GenerateMasterList()
@@ -84,7 +114,7 @@ namespace browz.DataModel
             _master = new FileEntryCollection("Master");
             foreach (var kvp in _directories.DirectoryDictionary) {
                 var files = Directory.EnumerateFiles(kvp.Key, "*",
-                    (kvp.Value ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly));
+                    (kvp.Value ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)).Where(e => !_extensions.Contains(Path.GetExtension(e)));
                 _master.AddEntries(files);
             }
         }
@@ -145,6 +175,7 @@ namespace browz.DataModel
             p_info.AddValue(Serialization.CollectionsDatabaseMaster, _master, typeof(FileEntryCollection));
             p_info.AddValue(Serialization.CollectionsDatabaseCollections, _collections, typeof(IEnumerable<FileEntryCollection>));
             p_info.AddValue(Serialization.CollectionsDatabaseDirs, _directories, typeof(DirectoryList));
+            p_info.AddValue(Serialization.CollectionsDatabaseExtensions, _extensions, typeof(List<string>));
         }
 
         #endregion
