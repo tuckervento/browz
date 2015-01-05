@@ -10,7 +10,7 @@ namespace browz
 {
     public static class Browz
     {
-        private static CollectionsDatabase _database = new CollectionsDatabase("Blank");
+        private static CollectionsDatabase _database = null;
 
         /// <summary>
         /// The main entry point for the application.
@@ -21,6 +21,11 @@ namespace browz
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new StartPage());
+
+            if (_database != null)
+            {
+                Application.Run(new CollectionBrowser(_database));
+            }
         }
 
         public static CollectionsDatabase Database
