@@ -13,7 +13,7 @@ namespace browz.Forms
     public partial class ValueEntryWindow : Form
     {
         /// <summary>
-        /// Creates a new extensible ValueEntryWindow.
+        /// Creates a new customizable ValueEntryWindow.
         /// </summary>
         public ValueEntryWindow()
         {

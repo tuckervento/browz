@@ -52,6 +52,12 @@
     <Compile Include="DataModel\FileEntryCollection.cs" />
     <Compile Include="DataModel\Serialization.cs" />
     <Compile Include="DataModel\FileEntry.cs" />
+    <Compile Include="Forms\ListEntryWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ListEntryWindow.Designer.cs">
+      <DependentUpon>ListEntryWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\CollectionBrowser.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -65,6 +71,12 @@
       <DependentUpon>StartPage.cs</DependentUpon>
     </Compile>
     <Compile Include="Browz.cs" />
+    <Compile Include="Forms\BinaryEntryWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BinaryEntryWindow.Designer.cs">
+      <DependentUpon>BinaryEntryWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ValueEntryWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -72,11 +84,17 @@
       <DependentUpon>ValueEntryWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\ListEntryWindow.resx">
+      <DependentUpon>ListEntryWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\CollectionBrowser.resx">
       <DependentUpon>CollectionBrowser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\StartPage.resx">
       <DependentUpon>StartPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BinaryEntryWindow.resx">
+      <DependentUpon>BinaryEntryWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ValueEntryWindow.resx">
       <DependentUpon>ValueEntryWindow.cs</DependentUpon>
