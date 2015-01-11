@@ -5,15 +5,28 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Collections;
 
 namespace browz.DataModel
 {
+    internal class SortedCollectionList : SortedList<string, FileEntryCollection>
+    {
+        public SortedCollectionList() : base((IComparer<string>)new CaseInsensitiveComparer())
+        {
+
+        }
+
+        public void Add(FileEntryCollection p_fec) {
+            base.Add(p_fec.Name, p_fec);
+        }
+    }
+
     [Serializable()]
     public class CollectionsDatabase : ISerializable
     {
         private readonly string _name;
         private FileEntryCollection _master;
-        private IEnumerable<FileEntryCollection> _collections;
+        private SortedCollectionList _collections;
         private DirectoryList _directories;
         private List<string> _extensions;
 
@@ -27,7 +40,7 @@ namespace browz.DataModel
         {
             _name = p_name;
             _master = new FileEntryCollection("Master");
-            _collections = new List<FileEntryCollection>();
+            _collections = new SortedCollectionList();
             _directories = new DirectoryList();
         }
 
@@ -41,7 +54,7 @@ namespace browz.DataModel
         {
             _name = p_name;
             _master = p_master;
-            _collections = new List<FileEntryCollection>();
+            _collections = new SortedCollectionList();
             _directories = p_directories;
         }
 
@@ -52,7 +65,7 @@ namespace browz.DataModel
         {
             _name = (string)p_info.GetValue(Serialization.CollectionsDatabaseName, typeof(string));
             _master = (FileEntryCollection)p_info.GetValue(Serialization.CollectionsDatabaseMaster, typeof(FileEntryCollection));
-            _collections = (IEnumerable<FileEntryCollection>)p_info.GetValue(Serialization.CollectionsDatabaseCollections, typeof(IEnumerable<FileEntryCollection>));
+            _collections = (SortedCollectionList)p_info.GetValue(Serialization.CollectionsDatabaseCollections, typeof(SortedCollectionList));
             _directories = (DirectoryList)p_info.GetValue(Serialization.CollectionsDatabaseDirs, typeof(DirectoryList));
             _extensions = (List<string>)p_info.GetValue(Serialization.CollectionsDatabaseExtensions, typeof(List<string>));
         }
@@ -83,6 +96,14 @@ namespace browz.DataModel
         public int CollectionCount
         {
             get { return _collections.Count(); }
+        }
+
+        /// <summary>
+        /// An alphabetical list of the collection (view) names.
+        /// </summary>
+        public IList<string> CollectionNames
+        {
+            get { return _collections.Keys; }
         }
 
         #endregion
@@ -135,8 +156,8 @@ namespace browz.DataModel
         /// <returns>True if successful, false if a collection with that name exists</returns>
         public bool AddCollection(string p_name)
         {
-            if (HasCollection(p_name)) { return false; }
-            _collections = _collections.Union(new FileEntryCollection[] { new FileEntryCollection(p_name, _master.Entries) });
+            if (String.IsNullOrEmpty(p_name) || HasCollection(p_name)) { return false; }
+            _collections.Add(new FileEntryCollection(p_name, _master.Entries));
             return true;
         }
 
@@ -147,8 +168,7 @@ namespace browz.DataModel
         /// <param name="p_tag">The tag to find</param>
         public IEnumerable<FileEntry> GetEntriesTaggedAs(string p_collection, string p_tag)
         {
-            if (!HasCollection(p_collection)) { return null; }
-            return _collections.Single(e => e.Name == p_collection).GetEntriesTaggedAs(p_tag);
+            return (HasCollection(p_collection)) ? _collections[p_collection].GetEntriesTaggedAs(p_tag) : null;
         }
 
         /// <summary>
@@ -157,14 +177,38 @@ namespace browz.DataModel
         /// <param name="p_collection">The collection to find</param>
         public FileEntryCollection GetCollection(string p_collection)
         {
-            return (HasCollection(p_collection)) ? _collections.Single(e => e.Name == p_collection) : null;
+            return _collections[p_collection] ?? null;
+        }
+
+        /// <summary>
+        /// Renames the appropriate collection.
+        /// </summary>
+        /// <param name="p_oldName">The current name of the collection</param>
+        /// <param name="p_newName">The new name of the collection</param>
+        /// <returns>Bool indicating success of rename</returns>
+        public bool RenameCollection(string p_oldName, string p_newName)
+        {
+            if (String.IsNullOrEmpty(p_newName) || String.IsNullOrEmpty(p_oldName) || HasCollection(p_oldName)) { return false; }
+            _collections.Add(new FileEntryCollection(p_newName, _collections[p_oldName].Entries));
+            _collections.Remove(p_oldName);
+            return true;
+        }
+
+        /// <summary>
+        /// Removes the specified collection from the database.
+        /// </summary>
+        /// <param name="p_collection">The collection to remove</param>
+        /// <returns>Bool indicating success of removal</returns>
+        public bool RemoveCollection(string p_collection)
+        {
+            return _collections.Remove(p_collection);
         }
 
         #endregion
 
         private bool HasCollection(string p_name)
         {
-            return _collections.Any(e => e.Name == p_name);
+            return _collections.Keys.Contains(p_name);
         }
 
         #region ISerializable
@@ -173,7 +217,7 @@ namespace browz.DataModel
         {
             p_info.AddValue(Serialization.CollectionsDatabaseName, _name, typeof(string));
             p_info.AddValue(Serialization.CollectionsDatabaseMaster, _master, typeof(FileEntryCollection));
-            p_info.AddValue(Serialization.CollectionsDatabaseCollections, _collections, typeof(IEnumerable<FileEntryCollection>));
+            p_info.AddValue(Serialization.CollectionsDatabaseCollections, _collections, typeof(SortedCollectionList));
             p_info.AddValue(Serialization.CollectionsDatabaseDirs, _directories, typeof(DirectoryList));
             p_info.AddValue(Serialization.CollectionsDatabaseExtensions, _extensions, typeof(List<string>));
         }

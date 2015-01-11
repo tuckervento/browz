@@ -37,6 +37,7 @@
             this.directoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editDirsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateMasterListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addNewCollectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,7 +48,6 @@
             this.listBoxTags = new System.Windows.Forms.ListBox();
             this.listBoxEntries = new System.Windows.Forms.ListBox();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -125,6 +125,13 @@
             this.editDirsToolStripMenuItem.Text = "Remove or Edit...";
             this.editDirsToolStripMenuItem.Click += new System.EventHandler(this.editDirsToolStripMenuItem_Click);
             // 
+            // clearToolStripMenuItem
+            // 
+            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.clearToolStripMenuItem.Text = "Clear...";
+            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
+            // 
             // generateMasterListToolStripMenuItem
             // 
             this.generateMasterListToolStripMenuItem.Name = "generateMasterListToolStripMenuItem";
@@ -160,14 +167,14 @@
             // renameToolStripMenuItem
             // 
             this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.renameToolStripMenuItem.Text = "Rename...";
             this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
             // 
             // removeToolStripMenuItem
             // 
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.removeToolStripMenuItem.Text = "Remove...";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
@@ -191,19 +198,13 @@
             this.listBoxEntries.FormattingEnabled = true;
             this.listBoxEntries.Location = new System.Drawing.Point(121, 27);
             this.listBoxEntries.Name = "listBoxEntries";
+            this.listBoxEntries.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.listBoxEntries.Size = new System.Drawing.Size(559, 667);
             this.listBoxEntries.TabIndex = 2;
             // 
             // folderBrowserDialog
             // 
             this.folderBrowserDialog.ShowNewFolderButton = false;
-            // 
-            // clearToolStripMenuItem
-            // 
-            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
-            this.clearToolStripMenuItem.Text = "Clear...";
-            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
             // CollectionBrowser
             // 

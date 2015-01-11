@@ -54,17 +54,24 @@ namespace browz.Forms
 
         private void addNewCollectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //prompt for name of view then add to db
+            //if we want we can check if this returns false and inform the user
+            _database.AddCollection(new ValueEntryWindow().ShowDialog("Name", "Enter the name of the new view:"));
         }
 
         private void renameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //prompt for new value, rename in db
+            var selectedName = _database.CollectionNames[listBoxTags.SelectedIndex];
+            _database.RenameCollection(selectedName, new ValueEntryWindow().ShowDialog("Rename", "Enter the new name for " + selectedName + ":"));
         }
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //prompt to double check, remove from db
+            var selectedName = _database.CollectionNames[listBoxTags.SelectedIndex];
+            if ((new BinaryEntryWindow()).ShowDialog("Are you sure?", "Remove the view " + selectedName + "?", "Yes", "No"))
+            {
+                _database.RemoveCollection(selectedName);
+            }
         }
 
         private void selectAViewToolStripMenuItem_Click(object sender, EventArgs e)
