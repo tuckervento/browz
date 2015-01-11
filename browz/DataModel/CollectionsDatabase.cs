@@ -106,6 +106,14 @@ namespace browz.DataModel
             get { return _collections.Keys; }
         }
 
+        /// <summary>
+        /// Boolean indicating whether or not there are any collections in this database.
+        /// </summary>
+        public bool Empty
+        {
+            get { return _collections.Count != 0; }
+        }
+
         #endregion
 
         #region Database modification
@@ -153,12 +161,12 @@ namespace browz.DataModel
         /// Add a new OrganizedCollection object to the CollectionsDatabase
         /// </summary>
         /// <param name="p_name">The name of the new OrganizedCollection</param>
-        /// <returns>True if successful, false if a collection with that name exists</returns>
-        public bool AddCollection(string p_name)
+        /// <returns>The name if successful, null if a collection with that name exists</returns>
+        public string AddCollection(string p_name)
         {
-            if (String.IsNullOrEmpty(p_name) || HasCollection(p_name)) { return false; }
+            if (String.IsNullOrEmpty(p_name) || HasCollection(p_name)) { return null; }
             _collections.Add(new FileEntryCollection(p_name, _master.Entries));
-            return true;
+            return p_name;
         }
 
         /// <summary>
@@ -186,12 +194,12 @@ namespace browz.DataModel
         /// <param name="p_oldName">The current name of the collection</param>
         /// <param name="p_newName">The new name of the collection</param>
         /// <returns>Bool indicating success of rename</returns>
-        public bool RenameCollection(string p_oldName, string p_newName)
+        public string RenameCollection(string p_oldName, string p_newName)
         {
-            if (String.IsNullOrEmpty(p_newName) || String.IsNullOrEmpty(p_oldName) || HasCollection(p_oldName)) { return false; }
+            if (String.IsNullOrEmpty(p_newName) || String.IsNullOrEmpty(p_oldName) || HasCollection(p_oldName)) { return null; }
             _collections.Add(new FileEntryCollection(p_newName, _collections[p_oldName].Entries));
             _collections.Remove(p_oldName);
-            return true;
+            return p_newName;
         }
 
         /// <summary>

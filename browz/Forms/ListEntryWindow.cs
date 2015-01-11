@@ -37,13 +37,13 @@ namespace browz.Forms
         /// <param name="p_text">The prompt text</param>
         /// <param name="p_buttonOne">The text to display for option 1</param>
         /// <param name="p_buttonTwo">The text to display for option 2</param>
-        /// <returns>True or false for one or two</returns>
-        public bool ShowDialog(string p_name, string p_text, IEnumerable<string> p_items)
+        /// <returns>Index of selected value</returns>
+        public int ShowDialog(string p_name, string p_text, IEnumerable<string> p_items)
         {
             this.Text = p_name;
             this.labelText.Text = p_text;
             this.listBox.Items.AddRange(p_items.ToArray());
-            return this.ShowDialog() == DialogResult.OK;
+            return (this.ShowDialog() == DialogResult.OK) ? this.listBox.SelectedIndex : -1;
         }
     }
 }

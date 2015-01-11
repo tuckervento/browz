@@ -14,11 +14,34 @@ namespace browz.Forms
     public partial class CollectionBrowser : Form
     {
         private CollectionsDatabase _database;
+        private string _selectedView;
 
         public CollectionBrowser(CollectionsDatabase p_database)
         {
             InitializeComponent();
             _database = p_database;
+            if (!_database.Empty)
+            {
+                _selectedView = _database.CollectionNames.First();
+                PopulateTags();
+                PopulateEntries();
+            }
+        }
+
+        private void PopulateTags()
+        {
+            listBoxTags.DataSource = _database.GetCollection(_selectedView).Tags.OrderBy(t => t);//, (IComparer<string>)new CaseInsensitiveComparer());
+            listBoxTags.SelectedIndex = 0;
+        }
+
+        private void PopulateEntries()
+        {
+            if (listBoxTags.SelectedItem != null)
+            {
+                listBoxEntries.DataSource = _database.GetEntriesTaggedAs(_selectedView, (string)listBoxTags.SelectedItem);
+                listBoxEntries.DisplayMember = "FileName";
+                listBoxEntries.ValueMember = "FullPath";
+            }
         }
 
         #region Menu items
@@ -50,27 +73,34 @@ namespace browz.Forms
         private void generateMasterListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _database.GenerateMasterList();
+            PopulateTags();
+            PopulateEntries();
         }
 
         private void addNewCollectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //if we want we can check if this returns false and inform the user
-            _database.AddCollection(new ValueEntryWindow().ShowDialog("Name", "Enter the name of the new view:"));
+            _selectedView = _database.AddCollection(new ValueEntryWindow().ShowDialog("Name", "Enter the name of the new view:"));
+            PopulateTags();
+            PopulateEntries();
         }
 
         private void renameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedName = _database.CollectionNames[listBoxTags.SelectedIndex];
-            _database.RenameCollection(selectedName, new ValueEntryWindow().ShowDialog("Rename", "Enter the new name for " + selectedName + ":"));
+            _selectedView = _database.RenameCollection(_selectedView, new ValueEntryWindow().ShowDialog("Rename", "Enter the new name for " + _selectedView + ":"));
+            PopulateTags();
+            PopulateEntries();
         }
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //prompt to double check, remove from db
-            var selectedName = _database.CollectionNames[listBoxTags.SelectedIndex];
-            if ((new BinaryEntryWindow()).ShowDialog("Are you sure?", "Remove the view " + selectedName + "?", "Yes", "No"))
+            if ((new BinaryEntryWindow()).ShowDialog("Are you sure?", "Remove the view " + _selectedView + "?", "Yes", "No"))
             {
-                _database.RemoveCollection(selectedName);
+                _database.RemoveCollection(_selectedView);
+                _selectedView = _database.CollectionNames.First();
+                PopulateTags();
+                PopulateEntries();
             }
         }
 

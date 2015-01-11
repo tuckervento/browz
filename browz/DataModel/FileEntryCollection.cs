@@ -73,9 +73,7 @@ namespace browz.DataModel
         {
             get
             {
-                var ret = new List<string>();
-                foreach (var fec in _collection) { if (!ret.Contains(fec.Tag)) { ret.Add(fec.Tag); } }
-                return ret;
+                return _collection.Select(c => c.Tag).Distinct();
             }
         }
 
