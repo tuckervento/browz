@@ -150,6 +150,15 @@ namespace browz.DataModel
         }
 
         /// <summary>
+        /// Removes
+        /// </summary>
+        /// <param name="enumerable"></param>
+        public void RemoveEntries(System.Windows.Forms.ListBox.SelectedObjectCollection selectedObjectCollection)
+        {
+            _collection.RemoveAll(e => selectedObjectCollection.Contains(e));
+        }
+
+        /// <summary>
         /// Sets the tag on the specified entry.
         /// </summary>
         /// <param name="p_entry">The entry to tag</param>
@@ -164,11 +173,11 @@ namespace browz.DataModel
         /// </summary>
         /// <param name="p_tag">The name of the tag</param>
         /// <param name="p_entries">The entries to tag</param>
-        public void TagEntriesAs(string p_tag, IEnumerable<string> p_entries)
+        public void TagEntriesAs(string p_tag, System.Windows.Forms.ListBox.SelectedObjectCollection p_entries)
         {
             foreach (var entry in p_entries)
             {
-                _collection.Find(e => e.Equals(entry)).Tag = p_tag;
+                this._collection.Find(e => e == (FileEntry)entry).Tag = p_tag;
             }
         }
 

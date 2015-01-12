@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -20,26 +21,25 @@ namespace browz.Forms
         {
             InitializeComponent();
             _database = p_database;
-            if (!_database.Empty)
-            {
-                PopulateTags();
-                PopulateEntries();
-            }
+            if (!_database.Empty) { Populate(); }
         }
 
-        private void PopulateTags()
+        private void Populate()
         {
             listBoxTags.DataSource = _database.GetCollection(_selectedView).Tags.OrderBy(t => t).ToList();//, (IComparer<string>)new CaseInsensitiveComparer());
-        }
-
-        private void PopulateEntries()
-        {
-            if (listBoxTags.SelectedItem != null)
+            if (listBoxTags.SelectedIndex != 1)
             {
                 listBoxEntries.DataSource = _database.GetEntriesTaggedAs(_selectedView, (string)listBoxTags.SelectedItem).ToList();
                 listBoxEntries.DisplayMember = "FileName";
                 listBoxEntries.ValueMember = "FullPath";
             }
+        }
+
+        private void PopulateEntries()
+        {
+            listBoxEntries.DataSource = _database.GetEntriesTaggedAs(_selectedView, (string)listBoxTags.SelectedItem).ToList();
+            listBoxEntries.DisplayMember = "FileName";
+            listBoxEntries.ValueMember = "FullPath";
         }
 
         #region Menu items
@@ -71,26 +71,20 @@ namespace browz.Forms
         private void generateMasterListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _database.GenerateMasterList();
-            if (!_database.Empty)
-            {
-                PopulateTags();
-                PopulateEntries();
-            }
+            if (!_database.Empty) { Populate(); }
         }
 
         private void addNewCollectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //if we want we can check if this returns false and inform the user
             _selectedView = _database.AddCollection(new ValueEntryWindow().ShowDialog("Name", "Enter the name of the new view:"));
-            PopulateTags();
-            PopulateEntries();
+            Populate();
         }
 
         private void renameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _selectedView = _database.RenameCollection(_selectedView, new ValueEntryWindow().ShowDialog("Rename", "Enter the new name for " + _selectedView + ":"));
-            PopulateTags();
-            PopulateEntries();
+            Populate();
         }
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -100,14 +94,46 @@ namespace browz.Forms
             {
                 _database.RemoveCollection(_selectedView);
                 _selectedView -= (_selectedView > 0) ? 1 : 0;
-                PopulateTags();
-                PopulateEntries();
+                Populate();
             }
         }
 
         private void selectAViewToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //prompt with a list, then populate browser
+            var temp = new ListEntryWindow().ShowDialog("View", "Select a view:", _database.CollectionNames);
+            if (temp >= 0)
+            {
+                _selectedView = temp;
+                Populate();
+            }
+        }
+
+        private void tagAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _database.GetCollection(_selectedView).TagEntriesAs(new ValueEntryWindow().ShowDialog("Tag", "Enter tag:"), listBoxEntries.SelectedItems);
+            Populate();
+        }
+
+        private void removeToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            _database.GetCollection(_selectedView).RemoveEntries(listBoxEntries.SelectedItems);
+            Populate();
+        }
+
+        private void listBoxTags_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PopulateEntries();
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("vlc", "-vvv \"" + ((FileEntry)listBoxEntries.SelectedItem).FullPath + "\"");
+        }
+
+        private void saveAndCloseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
 
         #endregion
