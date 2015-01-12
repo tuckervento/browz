@@ -39,6 +39,7 @@ namespace browz.Forms
                 var formatter = new BinaryFormatter();
                 var stream = new FileStream(openFileDialog.FileName, FileMode.Open, FileAccess.Read, FileShare.Read);
                 Browz.Database = (CollectionsDatabase)formatter.Deserialize(stream);
+                stream.Close();
                 this.Close();
             }
         }

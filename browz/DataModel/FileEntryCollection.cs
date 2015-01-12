@@ -30,10 +30,9 @@ namespace browz.DataModel
         /// </summary>
         /// <param name="p_name">The name of the new collection</param>
         /// <param name="p_entries">The entries to store in the collection</param>
-        public FileEntryCollection(string p_name, IEnumerable<FileEntry> p_entries)
+        public FileEntryCollection(string p_name, IEnumerable<FileEntry> p_entries) : this(p_name)
         {
-            _name = p_name;
-            _collection = p_entries.ToList();
+            _collection.AddRange(p_entries.Select(e => new FileEntry(e.FullPath, "untagged")));
         }
 
         /// <summary>
