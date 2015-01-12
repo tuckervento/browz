@@ -135,7 +135,7 @@ namespace browz.DataModel
         {
             foreach (var entry in p_entries)
             {
-                this._collection.Find(e => e == (FileEntry)entry).AddTag(p_tag);
+                this._collection.Find(e => e == (FileEntry)entry).AddTags(p_tag.Split(';'));
             }
         }
 

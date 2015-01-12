@@ -119,7 +119,7 @@ namespace browz.Forms
 
         private void tagAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _database.GetCollection(_selectedView).TagEntriesAs(new ValueEntryWindow().ShowDialog("Tag", "Enter tag:"), listBoxEntries.SelectedItems);
+            _database.GetCollection(_selectedView).TagEntriesAs(new ValueEntryWindow().ShowDialog("Tag", "Enter tags: (; delineates)"), listBoxEntries.SelectedItems);
             Populate();
         }
 

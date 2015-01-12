@@ -30,8 +30,20 @@ namespace browz.DataModel
         /// </summary>
         public FileEntry(SerializationInfo p_info, StreamingContext p_context)
         {
-            _fullPath = (string)p_info.GetValue(Serialization.FileEntryFullPath, typeof(string));
-            _tags = (List<string>)p_info.GetValue(Serialization.FileEntryTag, typeof(List<string>));
+            try
+            {
+                _fullPath = (string)p_info.GetValue(Serialization.FileEntryFullPath, typeof(string));
+                _tags = (List<string>)p_info.GetValue(Serialization.FileEntryTag, typeof(List<string>));
+            }
+            catch (System.Exception ex)
+            {//migration
+                _tags = new List<string>();
+                var tag = (string)p_info.GetValue(Serialization.FileEntryTag, typeof(string));
+                if (tag != "untagged")
+                {
+                    _tags.Add(tag);
+                }
+            }
         }
 
         #endregion
@@ -74,11 +86,6 @@ namespace browz.DataModel
             _tags.Clear();
         }
 
-        public void AddTag(string p_tag)
-        {
-            _tags.Add(p_tag);
-        }
-
         public void RemoveTag(string p_tag)
         {
             _tags.Remove(p_tag);
@@ -87,6 +94,11 @@ namespace browz.DataModel
         public bool HasTag(string p_tag)
         {
             return (_tags.Count != 0) ? _tags.Contains(p_tag) : p_tag.Equals("untagged");
+        }
+
+        public void AddTags(string[] p)
+        {
+            _tags.AddRange(p);
         }
 
         #endregion
