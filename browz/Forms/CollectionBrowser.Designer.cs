@@ -52,6 +52,11 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.addManuallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addExtensionsToIgnoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearExtensionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.displayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fullPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -99,7 +104,9 @@
             this.addDirectoryToolStripMenuItem,
             this.addManuallyToolStripMenuItem,
             this.editDirsToolStripMenuItem,
-            this.clearToolStripMenuItem});
+            this.clearToolStripMenuItem,
+            this.addExtensionsToIgnoreToolStripMenuItem,
+            this.clearExtensionsToolStripMenuItem});
             this.directoryToolStripMenuItem.Name = "directoryToolStripMenuItem";
             this.directoryToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.directoryToolStripMenuItem.Text = "Directories";
@@ -136,7 +143,8 @@
             // 
             this.viewsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addNewCollectionToolStripMenuItem,
-            this.currentCollToolStripMenuItem});
+            this.currentCollToolStripMenuItem,
+            this.displayToolStripMenuItem});
             this.viewsToolStripMenuItem.Name = "viewsToolStripMenuItem";
             this.viewsToolStripMenuItem.Size = new System.Drawing.Size(129, 20);
             this.viewsToolStripMenuItem.Text = "Organizational Views";
@@ -180,6 +188,8 @@
             // 
             // listBoxTags
             // 
+            this.listBoxTags.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.listBoxTags.FormattingEnabled = true;
             this.listBoxTags.Location = new System.Drawing.Point(12, 27);
             this.listBoxTags.Name = "listBoxTags";
@@ -189,6 +199,9 @@
             // 
             // listBoxEntries
             // 
+            this.listBoxEntries.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxEntries.ContextMenuStrip = this.contextMenuStrip1;
             this.listBoxEntries.FormattingEnabled = true;
             this.listBoxEntries.Location = new System.Drawing.Point(121, 27);
@@ -238,6 +251,43 @@
             this.addManuallyToolStripMenuItem.Text = "Add Manually...";
             this.addManuallyToolStripMenuItem.Click += new System.EventHandler(this.addManuallyToolStripMenuItem_Click);
             // 
+            // addExtensionsToIgnoreToolStripMenuItem
+            // 
+            this.addExtensionsToIgnoreToolStripMenuItem.Name = "addExtensionsToIgnoreToolStripMenuItem";
+            this.addExtensionsToIgnoreToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.addExtensionsToIgnoreToolStripMenuItem.Text = "Add Extensions To Ignore...";
+            this.addExtensionsToIgnoreToolStripMenuItem.Click += new System.EventHandler(this.addExtensionsToIgnoreToolStripMenuItem_Click);
+            // 
+            // clearExtensionsToolStripMenuItem
+            // 
+            this.clearExtensionsToolStripMenuItem.Name = "clearExtensionsToolStripMenuItem";
+            this.clearExtensionsToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.clearExtensionsToolStripMenuItem.Text = "Clear Extensions...";
+            this.clearExtensionsToolStripMenuItem.Click += new System.EventHandler(this.clearExtensionsToolStripMenuItem_Click);
+            // 
+            // displayToolStripMenuItem
+            // 
+            this.displayToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.nameToolStripMenuItem,
+            this.fullPathToolStripMenuItem});
+            this.displayToolStripMenuItem.Name = "displayToolStripMenuItem";
+            this.displayToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.displayToolStripMenuItem.Text = "Display";
+            // 
+            // nameToolStripMenuItem
+            // 
+            this.nameToolStripMenuItem.Name = "nameToolStripMenuItem";
+            this.nameToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.nameToolStripMenuItem.Text = "Name...";
+            this.nameToolStripMenuItem.Click += new System.EventHandler(this.nameToolStripMenuItem_Click);
+            // 
+            // fullPathToolStripMenuItem
+            // 
+            this.fullPathToolStripMenuItem.Name = "fullPathToolStripMenuItem";
+            this.fullPathToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.fullPathToolStripMenuItem.Text = "Full Path...";
+            this.fullPathToolStripMenuItem.Click += new System.EventHandler(this.fullPathToolStripMenuItem_Click);
+            // 
             // CollectionBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -282,5 +332,10 @@
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addManuallyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addExtensionsToIgnoreToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearExtensionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem displayToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem nameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fullPathToolStripMenuItem;
     }
 }

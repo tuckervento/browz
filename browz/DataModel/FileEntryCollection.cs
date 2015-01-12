@@ -86,7 +86,8 @@ namespace browz.DataModel
         /// <param name="p_newCollection">The new FileEntry objects</param>
         public void Clear(IEnumerable<FileEntry> p_newCollection)
         {
-            _collection = p_newCollection.ToList();
+            var names = p_newCollection.Select<FileEntry, string>(e => e.FullPath);
+            _collection.RemoveAll(p => !names.Contains(p.FullPath));
         }
 
         /// <summary>

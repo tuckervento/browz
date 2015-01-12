@@ -21,6 +21,8 @@ namespace browz.Forms
         {
             InitializeComponent();
             _database = p_database;
+            listBoxEntries.DisplayMember = "FileName";
+            listBoxEntries.ValueMember = "FullPath";
             if (!_database.Empty) { Populate(); }
         }
 
@@ -30,16 +32,12 @@ namespace browz.Forms
             if (listBoxTags.SelectedIndex != 1)
             {
                 listBoxEntries.DataSource = _database.GetEntriesTaggedAs(_selectedView, (string)listBoxTags.SelectedItem).ToList();
-                listBoxEntries.DisplayMember = "FileName";
-                listBoxEntries.ValueMember = "FullPath";
             }
         }
 
         private void PopulateEntries()
         {
             listBoxEntries.DataSource = _database.GetEntriesTaggedAs(_selectedView, (string)listBoxTags.SelectedItem).ToList();
-            listBoxEntries.DisplayMember = "FileName";
-            listBoxEntries.ValueMember = "FullPath";
         }
 
         #region Menu items
@@ -49,6 +47,8 @@ namespace browz.Forms
             //show folder browser dialog, then prompt for recursive or not
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
+                _database.DirectoryList.Add(folderBrowserDialog.SelectedPath,
+                    (new BinaryEntryWindow()).ShowDialog("Recursive?", "Search this directory recursively?", "Yes", "No"));
             }
         }
 
@@ -145,5 +145,28 @@ namespace browz.Forms
         }
 
         #endregion
+
+        private void addExtensionsToIgnoreToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var result = new ValueEntryWindow().ShowDialog("Extensions", "Enter extensions to ignore: (; delineates)");
+            _database.AddExcludedExtensions(result.Split(';'));
+        }
+
+        private void clearExtensionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _database.ClearExcludedExtensions();
+        }
+
+        private void nameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            listBoxEntries.DisplayMember = "FileName";
+            PopulateEntries();
+        }
+
+        private void fullPathToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            listBoxEntries.DisplayMember = "FullPath";
+            PopulateEntries();
+        }
     }
 }
