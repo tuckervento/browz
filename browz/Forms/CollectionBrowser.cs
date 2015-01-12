@@ -144,8 +144,6 @@ namespace browz.Forms
             this.Close();
         }
 
-        #endregion
-
         private void addExtensionsToIgnoreToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var result = new ValueEntryWindow().ShowDialog("Extensions", "Enter extensions to ignore: (; delineates)");
@@ -168,5 +166,13 @@ namespace browz.Forms
             listBoxEntries.DisplayMember = "FullPath";
             PopulateEntries();
         }
+
+        private void removeTagToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _database.GetCollection(_selectedView).UntagEntriesAs((string)listBoxTags.SelectedItem, listBoxEntries.SelectedItems);
+            PopulateEntries();
+        }
+
+        #endregion
     }
 }

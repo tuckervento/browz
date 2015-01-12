@@ -32,7 +32,7 @@ namespace browz.DataModel
         /// <param name="p_entries">The entries to store in the collection</param>
         public FileEntryCollection(string p_name, IEnumerable<FileEntry> p_entries) : this(p_name)
         {
-            _collection.AddRange(p_entries.Select(e => new FileEntry(e.FullPath, "untagged")));
+            _collection.AddRange(p_entries.Select(e => new FileEntry(e.FullPath)));
         }
 
         /// <summary>
@@ -72,7 +72,14 @@ namespace browz.DataModel
         {
             get
             {
-                return _collection.Select(c => c.Tag).Distinct();
+                IEnumerable<string> tags = new string[]{};
+
+                foreach (var entry in _collection)
+                {
+                    tags = tags.Union(entry.Tags);
+                }
+
+                return tags.Distinct();
             }
         }
 
@@ -93,41 +100,11 @@ namespace browz.DataModel
         /// <summary>
         /// Adds the specified files to the collection. (duplicates are ignored)
         /// </summary>
-        /// <param name="p_entries">The FileEntry objects to add</param>
-        public void AddEntries(IEnumerable<FileEntry> p_entries)
-        {
-            if (p_entries != null && p_entries.Any())
-                _collection.AddRange(p_entries);
-        }
-
-        /// <summary>
-        /// Adds the specified files to the collection. (duplicates are ignored)
-        /// </summary>
         /// <param name="p_entries">The entries to add</param>
         public void AddEntries(IEnumerable<string> p_entries)
         {
             if (p_entries != null && p_entries.Any())
                 _collection.AddRange(p_entries.Select<string, FileEntry>(e => new FileEntry(e)));
-        }
-
-        /// <summary>
-        /// Adds the specified files to the collection with the specified tag. (duplicates are ignored)
-        /// </summary>
-        /// <param name="p_entries">The entries to add</param>
-        /// <param name="p_tag">The tag to use</param>
-        public void AddEntries(IEnumerable<string> p_entries, string p_tag)
-        {
-            _collection.AddRange(p_entries.Select<string, FileEntry>(e => new FileEntry(e, p_tag)));
-        }
-
-        /// <summary>
-        /// Adds the specified file to the collection. (duplicates are ignored)
-        /// </summary>
-        /// <param name="p_entry">The FileEntry object to add</param>
-        public void AddEntry(FileEntry p_entry)
-        {
-            if (p_entry != null)
-                _collection.Add(p_entry);
         }
 
         /// <summary>
@@ -141,31 +118,12 @@ namespace browz.DataModel
         }
 
         /// <summary>
-        /// Removes the specified file from the collection, if it exists.
-        /// </summary>
-        /// <param name="p_entry">The entry to remove</param>
-        public void RemoveEntry(FileEntry p_entry)
-        {
-            _collection.Remove(p_entry);
-        }
-
-        /// <summary>
         /// Removes
         /// </summary>
         /// <param name="enumerable"></param>
         public void RemoveEntries(System.Windows.Forms.ListBox.SelectedObjectCollection selectedObjectCollection)
         {
             _collection.RemoveAll(e => selectedObjectCollection.Contains(e));
-        }
-
-        /// <summary>
-        /// Sets the tag on the specified entry.
-        /// </summary>
-        /// <param name="p_entry">The entry to tag</param>
-        /// <param name="p_tag">The tag to use</param>
-        public void TagEntryAs(string p_entry, string p_tag)
-        {
-            _collection.Find(e => e.Equals(p_entry)).Tag = p_tag;
         }
 
         /// <summary>
@@ -177,7 +135,15 @@ namespace browz.DataModel
         {
             foreach (var entry in p_entries)
             {
-                this._collection.Find(e => e == (FileEntry)entry).Tag = p_tag;
+                this._collection.Find(e => e == (FileEntry)entry).AddTag(p_tag);
+            }
+        }
+
+        public void UntagEntriesAs(string p_tag, System.Windows.Forms.ListBox.SelectedObjectCollection p_entries)
+        {
+            foreach (var entry in p_entries)
+            {
+                this._collection.Find(e => e == (FileEntry)entry).RemoveTag(p_tag);
             }
         }
 
@@ -189,7 +155,7 @@ namespace browz.DataModel
         /// <param name="p_tag">The tag to find</param>
         public IEnumerable<FileEntry> GetEntriesTaggedAs(string p_tag)
         {
-            foreach (var fe in _collection.Where(e => e.Tag == p_tag)) { yield return fe; }
+            foreach (var fe in _collection.Where(e => e.HasTag(p_tag))) { yield return fe; }
         }
 
         #region ISerializable

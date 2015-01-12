@@ -11,7 +11,7 @@ namespace browz.DataModel
     public class FileEntry : ISerializable, IEquatable<FileEntry>
     {
         private readonly string _fullPath;
-        private string _tag;
+        private List<string> _tags;
 
         #region Constructors
 
@@ -22,17 +22,7 @@ namespace browz.DataModel
         public FileEntry(string p_fullpath)
         {
             _fullPath = p_fullpath;
-        }
-
-        /// <summary>
-        /// Creates a new FileEntry object.
-        /// </summary>
-        /// <param name="p_fullpath">The absolute path of the file to reference</param>
-        /// <param name="p_tag">The tag for the file</param>
-        public FileEntry(string p_fullpath, string p_tag)
-        {
-            _fullPath = p_fullpath;
-            _tag = p_tag;
+            _tags = new List<string>();
         }
 
         /// <summary>
@@ -41,7 +31,7 @@ namespace browz.DataModel
         public FileEntry(SerializationInfo p_info, StreamingContext p_context)
         {
             _fullPath = (string)p_info.GetValue(Serialization.FileEntryFullPath, typeof(string));
-            _tag = (string)p_info.GetValue(Serialization.FileEntryTag, typeof(string));
+            _tags = (List<string>)p_info.GetValue(Serialization.FileEntryTag, typeof(List<string>));
         }
 
         #endregion
@@ -72,20 +62,31 @@ namespace browz.DataModel
         }
 
         /// <summary>
-        /// The file extension of the referenced file
-        /// </summary>
-        public string FileExtension
-        {
-            get { return System.IO.Path.GetExtension(_fullPath); }
-        }
-
-        /// <summary>
         /// The tag for the referenced file
         /// </summary>
-        public string Tag
+        public IEnumerable<string> Tags
         {
-            get { return _tag; }
-            set { _tag = value; }
+            get { return (_tags.Count == 0) ? new List<string>() { "untagged" } : _tags; }
+        }
+
+        public void ClearTags()
+        {
+            _tags.Clear();
+        }
+
+        public void AddTag(string p_tag)
+        {
+            _tags.Add(p_tag);
+        }
+
+        public void RemoveTag(string p_tag)
+        {
+            _tags.Remove(p_tag);
+        }
+
+        public bool HasTag(string p_tag)
+        {
+            return (_tags.Count != 0) ? _tags.Contains(p_tag) : p_tag.Equals("untagged");
         }
 
         #endregion
@@ -95,7 +96,7 @@ namespace browz.DataModel
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue(Serialization.FileEntryFullPath, _fullPath, typeof(string));
-            info.AddValue(Serialization.FileEntryTag, _tag, typeof(string));
+            info.AddValue(Serialization.FileEntryTag, _tags, typeof(List<string>));
         }
 
         #endregion

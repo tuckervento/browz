@@ -179,7 +179,7 @@ namespace browz.DataModel
                 {
                     var files = Directory.EnumerateFiles(kvp.Key, "*",
                         (kvp.Value ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)).Where(e => !_extensions.Contains(Path.GetExtension(e)));
-                    _master.AddEntries(files, "untagged");
+                    _master.AddEntries(files);
                 }
             }
             else
@@ -187,7 +187,7 @@ namespace browz.DataModel
                 foreach (var kvp in _directories.DirectoryDictionary)
                 {
                     var files = Directory.EnumerateFiles(kvp.Key, "*", (kvp.Value ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly));
-                    _master.AddEntries(files, "untagged");
+                    _master.AddEntries(files);
                 }
             }
 
@@ -198,23 +198,13 @@ namespace browz.DataModel
         }
 
         /// <summary>
-        /// Add a single FileEntry to all of the collections.
-        /// </summary>
-        /// <param name="p_path">The path to the file to add</param>
-        public void AddFileEntry(string p_path)
-        {
-            _master.AddEntry(p_path);
-        }
-
-        /// <summary>
         /// Add a new OrganizedCollection object to the CollectionsDatabase
         /// </summary>
         /// <param name="p_name">The name of the new OrganizedCollection</param>
         /// <returns>The index of the new collection</returns>
         public int AddCollection(string p_name)
         {
-            return _collections.Add(new FileEntryCollection(p_name, _master.Entries
-                )); ;
+            return _collections.Add(new FileEntryCollection(p_name, _master.Entries)); ;
         }
 
         /// <summary>

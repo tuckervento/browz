@@ -57,6 +57,7 @@
             this.displayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fullPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeTagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -213,11 +214,12 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openToolStripMenuItem,
             this.tagAsToolStripMenuItem,
-            this.removeToolStripMenuItem1,
-            this.openToolStripMenuItem});
+            this.removeTagToolStripMenuItem,
+            this.removeToolStripMenuItem1});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(127, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 114);
             // 
             // tagAsToolStripMenuItem
             // 
@@ -288,6 +290,13 @@
             this.fullPathToolStripMenuItem.Text = "Full Path...";
             this.fullPathToolStripMenuItem.Click += new System.EventHandler(this.fullPathToolStripMenuItem_Click);
             // 
+            // removeTagToolStripMenuItem
+            // 
+            this.removeTagToolStripMenuItem.Name = "removeTagToolStripMenuItem";
+            this.removeTagToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.removeTagToolStripMenuItem.Text = "Remove Tag...";
+            this.removeTagToolStripMenuItem.Click += new System.EventHandler(this.removeTagToolStripMenuItem_Click);
+            // 
             // CollectionBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -337,5 +346,6 @@
         private System.Windows.Forms.ToolStripMenuItem displayToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem nameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fullPathToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeTagToolStripMenuItem;
     }
 }
