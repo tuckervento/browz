@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using browz.DataModel;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace browz.Forms
 {
@@ -32,7 +34,13 @@ namespace browz.Forms
         private void buttonOpen_Click(object sender, EventArgs e)
         {
             var result = openFileDialog.ShowDialog();
-            //this is where we will deserialize!
+            if (result == DialogResult.OK)
+            {
+                var formatter = new BinaryFormatter();
+                var stream = new FileStream(openFileDialog.FileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+                Browz.Database = (CollectionsDatabase)formatter.Deserialize(stream);
+                this.Close();
+            }
         }
     }
 }

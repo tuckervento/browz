@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using browz.DataModel;
 using browz.Forms;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace browz
 {
@@ -25,6 +27,10 @@ namespace browz
             if (_database != null)
             {
                 Application.Run(new CollectionBrowser(_database));
+                var formatter = new BinaryFormatter();
+                var stream = new FileStream("C:\\" + _database.Name + ".brz", FileMode.Create, FileAccess.Write, FileShare.None);
+                formatter.Serialize(stream, _database);
+                stream.Close();
             }
         }
 

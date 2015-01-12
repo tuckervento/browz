@@ -9,6 +9,7 @@ using System.Collections;
 
 namespace browz.DataModel
 {
+    [Serializable()]
     internal class SortedCollectionList : List<FileEntryCollection>
     {
         //this cast doesn't work
@@ -99,6 +100,11 @@ namespace browz.DataModel
         #endregion
 
         #region Properties
+
+        public string Name
+        {
+            get { return _name; }
+        }
 
         /// <summary>
         /// The directories searched through for this database.
