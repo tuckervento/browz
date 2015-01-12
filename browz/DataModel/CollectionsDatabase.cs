@@ -9,15 +9,39 @@ using System.Collections;
 
 namespace browz.DataModel
 {
-    internal class SortedCollectionList : SortedList<string, FileEntryCollection>
+    internal class SortedCollectionList : List<FileEntryCollection>
     {
-        public SortedCollectionList() : base((IComparer<string>)new CaseInsensitiveComparer())
+        //this cast doesn't work
+        internal SortedCollectionList()
+            : base()
         {
-
         }
 
-        public void Add(FileEntryCollection p_fec) {
-            base.Add(p_fec.Name, p_fec);
+        internal int Add(FileEntryCollection p_fec)
+        {
+            base.Add(p_fec);
+            this.Sort();
+            return base.IndexOf(p_fec);
+        }
+
+        internal void Sort()
+        {
+            base.Sort((x, y) => string.Compare(x.Name, y.Name));
+        }
+
+        internal FileEntryCollection this[string s]
+        {
+            get { return base[this.IndexOf(s)]; }
+        }
+
+        internal void Remove(string p_name)
+        {
+            base.RemoveAt(this.IndexOf(p_name));
+        }
+
+        internal int IndexOf(string p_name)
+        {
+            return base.FindIndex(c => c.Name == p_name);
         }
     }
 
@@ -42,6 +66,7 @@ namespace browz.DataModel
             _master = new FileEntryCollection("Master");
             _collections = new SortedCollectionList();
             _directories = new DirectoryList();
+            _extensions = new List<string>();
         }
 
         /// <summary>
@@ -56,6 +81,7 @@ namespace browz.DataModel
             _master = p_master;
             _collections = new SortedCollectionList();
             _directories = p_directories;
+            _extensions = new List<string>();
         }
 
         /// <summary>
@@ -101,9 +127,9 @@ namespace browz.DataModel
         /// <summary>
         /// An alphabetical list of the collection (view) names.
         /// </summary>
-        public IList<string> CollectionNames
+        public IEnumerable<string> CollectionNames
         {
-            get { return _collections.Keys; }
+            get { return _collections.Select(c => c.Name); }
         }
 
         /// <summary>
@@ -111,7 +137,7 @@ namespace browz.DataModel
         /// </summary>
         public bool Empty
         {
-            get { return _collections.Count != 0; }
+            get { return _collections.Count == 0; }
         }
 
         #endregion
@@ -124,7 +150,7 @@ namespace browz.DataModel
         /// <param name="p_extensions">The extensions to exclude</param>
         public void AddExcludedExtensions(IEnumerable<string> p_extensions)
         {
-            _extensions.AddRange(p_extensions.Where(e => !_extensions.Contains(e));
+            _extensions.AddRange(p_extensions.Where(e => !_extensions.Contains(e)));
         }
 
         /// <summary>
@@ -141,10 +167,27 @@ namespace browz.DataModel
         public void GenerateMasterList()
         {
             _master = new FileEntryCollection("Master");
-            foreach (var kvp in _directories.DirectoryDictionary) {
-                var files = Directory.EnumerateFiles(kvp.Key, "*",
-                    (kvp.Value ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)).Where(e => !_extensions.Contains(Path.GetExtension(e)));
-                _master.AddEntries(files);
+            if (_extensions.Count > 0)
+            {
+                foreach (var kvp in _directories.DirectoryDictionary)
+                {
+                    var files = Directory.EnumerateFiles(kvp.Key, "*",
+                        (kvp.Value ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)).Where(e => !_extensions.Contains(Path.GetExtension(e)));
+                    _master.AddEntries(files, "untagged");
+                }
+            }
+            else
+            {
+                foreach (var kvp in _directories.DirectoryDictionary)
+                {
+                    var files = Directory.EnumerateFiles(kvp.Key, "*", (kvp.Value ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly));
+                    _master.AddEntries(files, "untagged");
+                }
+            }
+
+            foreach (var collection in _collections)
+            {
+                collection.Clear(_master.Entries);
             }
         }
 
@@ -161,12 +204,10 @@ namespace browz.DataModel
         /// Add a new OrganizedCollection object to the CollectionsDatabase
         /// </summary>
         /// <param name="p_name">The name of the new OrganizedCollection</param>
-        /// <returns>The name if successful, null if a collection with that name exists</returns>
-        public string AddCollection(string p_name)
+        /// <returns>The index of the new collection</returns>
+        public int AddCollection(string p_name)
         {
-            if (String.IsNullOrEmpty(p_name) || HasCollection(p_name)) { return null; }
-            _collections.Add(new FileEntryCollection(p_name, _master.Entries));
-            return p_name;
+            return _collections.Add(new FileEntryCollection(p_name, _master.Entries)); ;
         }
 
         /// <summary>
@@ -174,16 +215,16 @@ namespace browz.DataModel
         /// </summary>
         /// <param name="p_collection">The collection to search</param>
         /// <param name="p_tag">The tag to find</param>
-        public IEnumerable<FileEntry> GetEntriesTaggedAs(string p_collection, string p_tag)
+        public IEnumerable<FileEntry> GetEntriesTaggedAs(int p_collection, string p_tag)
         {
-            return (HasCollection(p_collection)) ? _collections[p_collection].GetEntriesTaggedAs(p_tag) : null;
+            return _collections[p_collection].GetEntriesTaggedAs(p_tag);
         }
 
         /// <summary>
         /// Returns the collection with the specified name, or null if it doesn't exist.
         /// </summary>
         /// <param name="p_collection">The collection to find</param>
-        public FileEntryCollection GetCollection(string p_collection)
+        public FileEntryCollection GetCollection(int p_collection)
         {
             return _collections[p_collection] ?? null;
         }
@@ -191,33 +232,26 @@ namespace browz.DataModel
         /// <summary>
         /// Renames the appropriate collection.
         /// </summary>
-        /// <param name="p_oldName">The current name of the collection</param>
+        /// <param name="p_collection">The index of the collection</param>
         /// <param name="p_newName">The new name of the collection</param>
-        /// <returns>Bool indicating success of rename</returns>
-        public string RenameCollection(string p_oldName, string p_newName)
+        /// <returns>Index of new collection</returns>
+        public int RenameCollection(int p_collection, string p_newName)
         {
-            if (String.IsNullOrEmpty(p_newName) || String.IsNullOrEmpty(p_oldName) || HasCollection(p_oldName)) { return null; }
-            _collections.Add(new FileEntryCollection(p_newName, _collections[p_oldName].Entries));
-            _collections.Remove(p_oldName);
-            return p_newName;
+            _collections[p_collection].Name = p_newName;
+            _collections.Sort();
+            return _collections.IndexOf(p_newName);
         }
 
         /// <summary>
         /// Removes the specified collection from the database.
         /// </summary>
         /// <param name="p_collection">The collection to remove</param>
-        /// <returns>Bool indicating success of removal</returns>
-        public bool RemoveCollection(string p_collection)
+        public void RemoveCollection(int p_collection)
         {
-            return _collections.Remove(p_collection);
+            _collections.RemoveAt(p_collection);
         }
 
         #endregion
-
-        private bool HasCollection(string p_name)
-        {
-            return _collections.Keys.Contains(p_name);
-        }
 
         #region ISerializable
 

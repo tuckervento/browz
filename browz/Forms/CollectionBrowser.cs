@@ -14,7 +14,7 @@ namespace browz.Forms
     public partial class CollectionBrowser : Form
     {
         private CollectionsDatabase _database;
-        private string _selectedView;
+        private int _selectedView = 0;
 
         public CollectionBrowser(CollectionsDatabase p_database)
         {
@@ -22,7 +22,6 @@ namespace browz.Forms
             _database = p_database;
             if (!_database.Empty)
             {
-                _selectedView = _database.CollectionNames.First();
                 PopulateTags();
                 PopulateEntries();
             }
@@ -30,15 +29,14 @@ namespace browz.Forms
 
         private void PopulateTags()
         {
-            listBoxTags.DataSource = _database.GetCollection(_selectedView).Tags.OrderBy(t => t);//, (IComparer<string>)new CaseInsensitiveComparer());
-            listBoxTags.SelectedIndex = 0;
+            listBoxTags.DataSource = _database.GetCollection(_selectedView).Tags.OrderBy(t => t).ToList();//, (IComparer<string>)new CaseInsensitiveComparer());
         }
 
         private void PopulateEntries()
         {
             if (listBoxTags.SelectedItem != null)
             {
-                listBoxEntries.DataSource = _database.GetEntriesTaggedAs(_selectedView, (string)listBoxTags.SelectedItem);
+                listBoxEntries.DataSource = _database.GetEntriesTaggedAs(_selectedView, (string)listBoxTags.SelectedItem).ToList();
                 listBoxEntries.DisplayMember = "FileName";
                 listBoxEntries.ValueMember = "FullPath";
             }
@@ -73,8 +71,11 @@ namespace browz.Forms
         private void generateMasterListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _database.GenerateMasterList();
-            PopulateTags();
-            PopulateEntries();
+            if (!_database.Empty)
+            {
+                PopulateTags();
+                PopulateEntries();
+            }
         }
 
         private void addNewCollectionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -98,7 +99,7 @@ namespace browz.Forms
             if ((new BinaryEntryWindow()).ShowDialog("Are you sure?", "Remove the view " + _selectedView + "?", "Yes", "No"))
             {
                 _database.RemoveCollection(_selectedView);
-                _selectedView = _database.CollectionNames.First();
+                _selectedView -= (_selectedView > 0) ? 1 : 0;
                 PopulateTags();
                 PopulateEntries();
             }

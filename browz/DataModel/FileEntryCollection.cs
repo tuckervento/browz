@@ -11,7 +11,7 @@ namespace browz.DataModel
     public class FileEntryCollection : ISerializable
     {
         private string _name;
-        private IEnumerable<FileEntry> _collection;
+        private List<FileEntry> _collection;
 
         #region Constructors
 
@@ -33,7 +33,7 @@ namespace browz.DataModel
         public FileEntryCollection(string p_name, IEnumerable<FileEntry> p_entries)
         {
             _name = p_name;
-            _collection = p_entries;
+            _collection = p_entries.ToList();
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace browz.DataModel
         public FileEntryCollection(SerializationInfo p_info, StreamingContext p_context)
         {
             _name = (string)p_info.GetValue(Serialization.FileEntryCollectionName, typeof(string));
-            _collection = (IEnumerable<FileEntry>)p_info.GetValue(Serialization.FileEntryCollectionEntries, typeof(IEnumerable<FileEntry>));
+            _collection = (List<FileEntry>)p_info.GetValue(Serialization.FileEntryCollectionEntries, typeof(List<FileEntry>));
         }
 
         #endregion
@@ -82,13 +82,22 @@ namespace browz.DataModel
         #region Collection modification
 
         /// <summary>
+        /// Clears and replaces the FileEntry objects in this collection.
+        /// </summary>
+        /// <param name="p_newCollection">The new FileEntry objects</param>
+        public void Clear(IEnumerable<FileEntry> p_newCollection)
+        {
+            _collection = p_newCollection.ToList();
+        }
+
+        /// <summary>
         /// Adds the specified files to the collection. (duplicates are ignored)
         /// </summary>
         /// <param name="p_entries">The FileEntry objects to add</param>
         public void AddEntries(IEnumerable<FileEntry> p_entries)
         {
             if (p_entries != null && p_entries.Any())
-                _collection = _collection.Union(p_entries);
+                _collection.AddRange(p_entries);
         }
 
         /// <summary>
@@ -98,7 +107,17 @@ namespace browz.DataModel
         public void AddEntries(IEnumerable<string> p_entries)
         {
             if (p_entries != null && p_entries.Any())
-                _collection = _collection.Union(p_entries.Cast<FileEntry>());
+                _collection.AddRange(p_entries.Select<string, FileEntry>(e => new FileEntry(e)));
+        }
+
+        /// <summary>
+        /// Adds the specified files to the collection with the specified tag. (duplicates are ignored)
+        /// </summary>
+        /// <param name="p_entries">The entries to add</param>
+        /// <param name="p_tag">The tag to use</param>
+        public void AddEntries(IEnumerable<string> p_entries, string p_tag)
+        {
+            _collection.AddRange(p_entries.Select<string, FileEntry>(e => new FileEntry(e, p_tag)));
         }
 
         /// <summary>
@@ -108,7 +127,7 @@ namespace browz.DataModel
         public void AddEntry(FileEntry p_entry)
         {
             if (p_entry != null)
-                _collection = _collection.Union(new FileEntry[]{p_entry});
+                _collection.Add(p_entry);
         }
 
         /// <summary>
@@ -118,7 +137,7 @@ namespace browz.DataModel
         public void AddEntry(string p_entry)
         {
             if (!String.IsNullOrWhiteSpace(p_entry))
-                _collection = _collection.Union(new FileEntry[] { (FileEntry)p_entry });
+                _collection.Add((FileEntry)p_entry);
         }
 
         /// <summary>
@@ -127,16 +146,7 @@ namespace browz.DataModel
         /// <param name="p_entry">The entry to remove</param>
         public void RemoveEntry(FileEntry p_entry)
         {
-            _collection = _collection.Where(e => !e.Equals(p_entry));
-        }
-
-        /// <summary>
-        /// Removes the specified file from the collection, if it exists.
-        /// </summary>
-        /// <param name="p_entry">The entry to remove</param>
-        public void RemoveEntry(string p_entry)
-        {
-            _collection = _collection.Where(e => !e.Equals((FileEntry)p_entry));
+            _collection.Remove(p_entry);
         }
 
         /// <summary>
@@ -144,12 +154,9 @@ namespace browz.DataModel
         /// </summary>
         /// <param name="p_entry">The entry to tag</param>
         /// <param name="p_tag">The tag to use</param>
-        /// <returns>Returns false if the entry doesn't exist</returns>
-        public bool TagEntryAs(string p_entry, string p_tag)
+        public void TagEntryAs(string p_entry, string p_tag)
         {
-            if (!_collection.Any(e => e.Equals(p_entry))) { return false; }
-            _collection.Single(e => e.Equals(p_entry)).Tag = p_tag;
-            return true;
+            _collection.Find(e => e.Equals(p_entry)).Tag = p_tag;
         }
 
         /// <summary>
@@ -161,7 +168,7 @@ namespace browz.DataModel
         {
             foreach (var entry in p_entries)
             {
-                TagEntryAs(p_tag, entry);
+                _collection.Find(e => e.Equals(entry)).Tag = p_tag;
             }
         }
 
@@ -181,7 +188,7 @@ namespace browz.DataModel
         public void GetObjectData(SerializationInfo p_info, StreamingContext p_context)
         {
             p_info.AddValue(Serialization.FileEntryCollectionName, _name, typeof(string));
-            p_info.AddValue(Serialization.FileEntryCollectionEntries, _collection, typeof(IEnumerable<FileEntry>));
+            p_info.AddValue(Serialization.FileEntryCollectionEntries, _collection, typeof(List<FileEntry>));
         }
 
         #endregion

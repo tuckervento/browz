@@ -46,7 +46,7 @@ namespace browz.DataModel
         #endregion
 
         //explicit conversion from string to FileEntry
-        public static explicit operator FileEntry(string s)
+        public static explicit operator FileEntry(String s)
         {
             FileEntry fe = new FileEntry(s);
             return fe;
