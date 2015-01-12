@@ -49,7 +49,15 @@ namespace browz.Forms
             //show folder browser dialog, then prompt for recursive or not
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
-                _database.DirectoryList.Add(folderBrowserDialog.SelectedPath,
+            }
+        }
+
+        private void addManuallyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var result = new ValueEntryWindow().ShowDialog("Directory", "Enter the full path:");
+            if (!String.IsNullOrEmpty(result))
+            {
+                _database.DirectoryList.Add(result,
                     (new BinaryEntryWindow()).ShowDialog("Recursive?", "Search this directory recursively?", "Yes", "No"));
             }
         }

@@ -46,11 +46,12 @@
             this.selectAViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listBoxTags = new System.Windows.Forms.ListBox();
             this.listBoxEntries = new System.Windows.Forms.ListBox();
-            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tagAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.addManuallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -96,6 +97,7 @@
             // 
             this.directoryToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addDirectoryToolStripMenuItem,
+            this.addManuallyToolStripMenuItem,
             this.editDirsToolStripMenuItem,
             this.clearToolStripMenuItem});
             this.directoryToolStripMenuItem.Name = "directoryToolStripMenuItem";
@@ -195,10 +197,6 @@
             this.listBoxEntries.Size = new System.Drawing.Size(559, 667);
             this.listBoxEntries.TabIndex = 2;
             // 
-            // folderBrowserDialog
-            // 
-            this.folderBrowserDialog.ShowNewFolderButton = false;
-            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -211,23 +209,34 @@
             // tagAsToolStripMenuItem
             // 
             this.tagAsToolStripMenuItem.Name = "tagAsToolStripMenuItem";
-            this.tagAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.tagAsToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.tagAsToolStripMenuItem.Text = "Tag As...";
             this.tagAsToolStripMenuItem.Click += new System.EventHandler(this.tagAsToolStripMenuItem_Click);
             // 
             // removeToolStripMenuItem1
             // 
             this.removeToolStripMenuItem1.Name = "removeToolStripMenuItem1";
-            this.removeToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.removeToolStripMenuItem1.Size = new System.Drawing.Size(126, 22);
             this.removeToolStripMenuItem1.Text = "Remove...";
             this.removeToolStripMenuItem1.Click += new System.EventHandler(this.removeToolStripMenuItem1_Click);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.openToolStripMenuItem.Text = "Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // folderBrowserDialog
+            // 
+            this.folderBrowserDialog.ShowNewFolderButton = false;
+            // 
+            // addManuallyToolStripMenuItem
+            // 
+            this.addManuallyToolStripMenuItem.Name = "addManuallyToolStripMenuItem";
+            this.addManuallyToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.addManuallyToolStripMenuItem.Text = "Add Manually...";
+            this.addManuallyToolStripMenuItem.Click += new System.EventHandler(this.addManuallyToolStripMenuItem_Click);
             // 
             // CollectionBrowser
             // 
@@ -272,5 +281,6 @@
         private System.Windows.Forms.ToolStripMenuItem tagAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addManuallyToolStripMenuItem;
     }
 }

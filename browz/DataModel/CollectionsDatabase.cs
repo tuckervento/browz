@@ -213,7 +213,8 @@ namespace browz.DataModel
         /// <returns>The index of the new collection</returns>
         public int AddCollection(string p_name)
         {
-            return _collections.Add(new FileEntryCollection(p_name, _master.Entries)); ;
+            return _collections.Add(new FileEntryCollection(p_name, _master.Entries
+                )); ;
         }
 
         /// <summary>
