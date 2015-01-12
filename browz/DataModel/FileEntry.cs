@@ -41,6 +41,7 @@ namespace browz.DataModel
         public FileEntry(SerializationInfo p_info, StreamingContext p_context)
         {
             _fullPath = (string)p_info.GetValue(Serialization.FileEntryFullPath, typeof(string));
+            _tag = (string)p_info.GetValue(Serialization.FileEntryTag, typeof(string));
         }
 
         #endregion
@@ -94,6 +95,7 @@ namespace browz.DataModel
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue(Serialization.FileEntryFullPath, _fullPath, typeof(string));
+            info.AddValue(Serialization.FileEntryTag, _tag, typeof(string));
         }
 
         #endregion
