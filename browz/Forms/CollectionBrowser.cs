@@ -173,6 +173,16 @@ namespace browz.Forms
             PopulateEntries();
         }
 
+        private void searchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var search = new ValueEntryWindow().ShowDialog("Search", "Enter tags to search for: (&& search, ; delineated)");
+            if (!String.IsNullOrEmpty(search))
+            {
+                var results = search.Split(';').Aggregate(Enumerable.Empty<FileEntry>(), (current, term) => current.Union(_database.GetEntriesTaggedAs(_selectedView, term)));
+                listBoxEntries.DataSource = results.ToList();
+            }
+        }
+
         #endregion
     }
 }
