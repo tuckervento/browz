@@ -178,7 +178,8 @@ namespace browz.Forms
             var search = new ValueEntryWindow().ShowDialog("Search", "Enter tags to search for: (&& search, ; delineated)");
             if (!String.IsNullOrEmpty(search))
             {
-                var results = search.Split(';').Aggregate(Enumerable.Empty<FileEntry>(), (current, term) => current.Union(_database.GetEntriesTaggedAs(_selectedView, term)));
+                var results = search.Split(';').Aggregate((IEnumerable<FileEntry>)_database.GetCollection(_selectedView).Entries,
+                    (current, term) => current.Intersect(_database.GetEntriesTaggedAs(_selectedView, term)));
                 listBoxEntries.DataSource = results.ToList();
             }
         }
